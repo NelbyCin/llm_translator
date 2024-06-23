@@ -12,12 +12,15 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+def load_config(config_file_path):
+    # 从指定路径加载config.json文件
+    with open(config_file_path, 'r', encoding='utf-8') as f:
+        config_data = json.load(f)
+    return config_data
+
 
 # 翻译函数
-def translate(text, source_lang, target_lang,url_dict):
-    # 这里应该有翻译的实现代码，比如调用一个翻译API
-    # 目前我们只是返回一个示例结果
-    api_key = ''
+def translate(text, source_lang, target_lang,url_dict,api_key):
     base_url = url_dict['base_url']
     url = url_dict['url']
     split_style = target_lang.split("-")
@@ -74,28 +77,17 @@ def api_translate():
     source_lang = data.get('source_lang')
     target_lang = data.get('target_lang')
     model_name= data.get("model_name")
+    config_data = load_config('config.json')
     if model_name == 'chatglm3':
-        url_dict = {
-            'base_url': '',
-            'url':''
-        }
+        url_dict =  config_data['chatglm3'],
     elif model_name == 'chatglm4':
-        url_dict = {
-            'base_url': '',
-            'url': ''
-        }
+        url_dict =  config_data['chatglm4'],
     elif model_name == 'chatgpt':
-        url_dict = {
-          'base_url' : '',
-          'url' : ''
-        }
+        url_dict =  config_data['chatgpt'],
     else:
-        url_dict = {
-            'base_url': "",
-            'url': ''
-        }
+        url_dict = config_data['chatgpt'],
     if text and source_lang and target_lang:
-        result = translate(text, source_lang, target_lang,url_dict)
+        result = translate(text, source_lang, target_lang,url_dict,config_data['api_key'])
         return jsonify(result), 200
     else:
         return jsonify({"error": "缺少必要的参数"}), 400

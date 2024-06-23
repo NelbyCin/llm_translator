@@ -1,0 +1,15 @@
+{
+  "api_key": "",
+  "chatglm3": {
+    "base_url": "",
+    "url": ""
+  },
+  "chatglm4": {
+    "base_url": "",
+    "url": ""
+  },
+  "chatgpt": {
+    "base_url": "",
+    "url": ""
+  }
+}
