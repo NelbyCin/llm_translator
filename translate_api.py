@@ -17,7 +17,7 @@ CORS(app)
 def translate(text, source_lang, target_lang,url_dict):
     # 这里应该有翻译的实现代码，比如调用一个翻译API
     # 目前我们只是返回一个示例结果
-    api_key = 'fk226350-fK249RFhhXv7T2n3xZRcfCAofU6c7lf6'
+    api_key = ''
     base_url = url_dict['base_url']
     url = url_dict['url']
     split_style = target_lang.split("-")
@@ -76,23 +76,23 @@ def api_translate():
     model_name= data.get("model_name")
     if model_name == 'chatglm3':
         url_dict = {
-            'base_url': 'http://10.103.178.231:6006/v1',
-            'url':'http://10.103.178.231:6006/v1/chat/completions'
+            'base_url': '',
+            'url':''
         }
     elif model_name == 'chatglm4':
         url_dict = {
-            'base_url': 'http://10.103.178.231:5000/v1',
-            'url': 'http://10.103.178.231:5000/v1/chat/completions'
+            'base_url': '',
+            'url': ''
         }
     elif model_name == 'chatgpt':
         url_dict = {
-          'base_url' : "https://oa.api2d.net/",
-          'url' : 'https://oa.api2d.net/v1/chat/completions'
+          'base_url' : '',
+          'url' : ''
         }
     else:
         url_dict = {
-            'base_url': "https://oa.api2d.net/",
-            'url': 'https://oa.api2d.net/v1/chat/completions'
+            'base_url': "",
+            'url': ''
         }
     if text and source_lang and target_lang:
         result = translate(text, source_lang, target_lang,url_dict)

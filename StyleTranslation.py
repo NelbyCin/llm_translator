@@ -23,7 +23,7 @@ langchain.debug = True
 
 device = 'cuda'
 # Chinese
-model_name = "../bge-large-zh-v1.5"
+model_name = "bge-large-zh-v1.5"
 model_kwargs = {"device": device}
 encode_kwargs = {"normalize_embeddings": True}
 bgeEmbeddings = HuggingFaceBgeEmbeddings(
@@ -31,7 +31,7 @@ bgeEmbeddings = HuggingFaceBgeEmbeddings(
 )
 
 #English
-embedding_model_name = '../bce-embedding-base_v1/maidalun/bce-embedding-base_v1'
+embedding_model_name = 'bce-embedding-base_v1/maidalun/bce-embedding-base_v1'
 embedding_model_kwargs = {'device': device}
 embedding_encode_kwargs = {'batch_size': 32, 'normalize_embeddings': True}
 
@@ -41,7 +41,7 @@ embed_model = HuggingFaceEmbeddings(
     encode_kwargs=embedding_encode_kwargs
 )
 
-reranker_args = {'model': '../bce-reranker-base_v1/maidalun/bce-reranker-base_v1', 'top_n': 3, 'device': device}
+reranker_args = {'model': 'bce-reranker-base_v1/maidalun/bce-reranker-base_v1', 'top_n': 3, 'device': device}
 reranker = BCERerank(**reranker_args)
 
 global_retriever = None
@@ -56,7 +56,7 @@ def text_style_transformation(base_url,api_key,text, store_name, language):
     llm = ChatOpenAI(temperature=0.0, base_url=base_url, api_key=api_key)
 
     # 初始化 HuggingFaceBgeEmbeddings 和 FAISS 检索器
-    model_name = "../bge-large-zh-v1.5"
+    model_name = "bge-large-zh-v1.5"
     model_kwargs = {"device": "cuda"}
     encode_kwargs = {"normalize_embeddings": True}
     bgeEmbeddings = HuggingFaceBgeEmbeddings(
