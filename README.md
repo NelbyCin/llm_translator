@@ -16,6 +16,9 @@
 langchain：集成了 langchain 技术，提供高效的文本处理和转换能力。  
 
 ## 安装和使用
+
+### 后端服务部署
+
 1.克隆仓库到本地:
 ```
 git clone https://github.com/NelbyCin/llm_translator.git
@@ -44,3 +47,26 @@ pip install -r requirements.txt
 ```
 python translate_api.py
 ```
+
+### 前端服务部署  
+1. 切换到本项目的 `./web` 路径下，运行
+```sh
+npm install
+```
+安装web部署所需要的依赖项（确保您已经事先安装了node.js）
+
+2. 在安装完毕之后，修改相关代码中的后端请求地址，随后运行
+```sh
+npm run dev
+```
+即可以开发模式在 `http://localhost:5173` 上拉起web服务，即可开始使用本应用。
+
+## 应用效果预览
+
+文字界面展示：  
+
+![文字翻译界面](./resource/1.png)
+
+文档界面展示：  
+
+![文档翻译界面](./resource/2.png)

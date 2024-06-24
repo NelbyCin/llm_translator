@@ -1,0 +1,143 @@
+<script setup lang="ts">
+import {ContentStore} from '@/stores/translation'
+import {LangStore} from '@/stores/language'
+import {storeToRefs} from 'pinia'
+import axios from 'axios'
+
+const URL = 'http://10.244.4.85:5000/translate'
+
+const contentStore = ContentStore()
+const langStore = LangStore()
+
+const {sourceContent} = storeToRefs(contentStore)
+const {isInput, modelName} = storeToRefs(langStore)
+
+async function pushTranslate(text: string) {
+  let lang_code = langStore.getLangCode()
+  console.log(modelName.value)
+  await axios
+      .post(URL, {
+        text: text,
+        source_lang: lang_code['src'],
+        target_lang: lang_code['tgt'],
+        model_name: modelName.value,
+      })
+      .then((res) => {
+        contentStore.setLoading()
+        contentStore.setTargetContent(res.data.trans_result.dst)
+      })
+      .catch((err) => {
+        contentStore.setLoading()
+        console.log(err)
+      })
+}
+
+function handleInput(e: KeyboardEvent) {
+  if (e.key !== 'Enter') return
+  else if (e.ctrlKey && e.key === 'Enter') {
+    sourceContent.value += '\n'
+    return
+  } else if (sourceContent.value === '') {
+    e.preventDefault()
+    return
+  }
+  contentStore.setLoading()
+  e.preventDefault()
+  pushTranslate(sourceContent.value)
+}
+
+function handleCopy() {
+  navigator.clipboard
+      .writeText(sourceContent.value)
+      .then(() => {
+        console.log('Copy success')
+      })
+      .catch(() => {
+        console.log('Copy failed')
+      })
+}
+</script>
+
+<template>
+  <div class="main">
+    <textarea class="content-area" v-model="sourceContent" @keydown="handleInput" @focus="()=>{isInput=true}" @blur="()=>{isInput=false}"> </textarea>
+    <div class="tool-area">
+      <svg
+          :style="{ opacity: sourceContent != '' ? 1 : 0 }"
+          :class="{ disabled: sourceContent == '' }"
+          @click="handleCopy"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+      >
+        <path
+            d="M8.75 16.25H6.875C5.83947 16.25 5 15.1867 5 13.875V4.375C5 3.06332 5.83947 2 6.875 2H14.375C15.4105 2 16.25 3.06332 16.25 4.375V6.75M10.625 21H18.125C19.1605 21 20 19.9367 20 18.625V9.125C20 7.81332 19.1605 6.75 18.125 6.75H10.625C9.58947 6.75 8.75 7.81332 8.75 9.125V18.625C8.75 19.9367 9.58947 21 10.625 21Z"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        ></path>
+      </svg>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+
+  .content-area {
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+    font-size: 18px;
+    line-height: 1.5;
+    overflow-y: auto;
+    border: none;
+    outline: none;
+    resize: none;
+    background-color: transparent;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .content-area::-webkit-scrollbar {
+    visibility: hidden;
+  }
+
+  .tool-area {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    transition: 1s ease-in-out;
+
+    svg {
+      transition: 0.3s ease-in-out;
+      width: 50px;
+      height: 50px;
+      padding: 6px;
+      border-radius: 6px;
+      margin: 10px 20px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(242, 244, 247, 0.8);
+      }
+    }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+</style>
